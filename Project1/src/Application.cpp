@@ -266,6 +266,44 @@ int main()
         spherephysclone->Initialize(false, true, ObjectMode::DYNAMIC);
         engine.AddPhysicsObjects(spherephysclone);
     }
+    for (size_t i = 1; i < 4; i++)
+    {
+        Model* sphere3 = new Model(sphere2);
+        sphere3->transform.SetTranslation(glm::vec3(1.5f * i, 2, 0.5f));
+        sphere3->transform.SetScale(glm::vec3(0.5f));
+        loadedModels.push_back(sphere3);
+        PhysicsObject* spherephysclone = new PhysicsObject(sphere3);
+        spherephysclone->physicsType = SPHERE;
+        spherephysclone->Initialize(false, true, ObjectMode::DYNAMIC);
+        engine.AddPhysicsObjects(spherephysclone);
+    }
+
+    for (size_t i = 1; i < 5; i++)
+    {
+        Model* sphere3 = new Model(sphere2);
+        sphere3->transform.SetTranslation(glm::vec3(0, 0.0f, -1.5f * i));
+        sphere3->transform.SetScale(glm::vec3(0.5f));
+        loadedModels.push_back(sphere3);
+        PhysicsObject* spherephysclone = new PhysicsObject(sphere3);
+        spherephysclone->physicsType = SPHERE;
+        spherephysclone->Initialize(false, true, ObjectMode::DYNAMIC);
+        engine.AddPhysicsObjects(spherephysclone);
+    }
+
+    //for (size_t i = 1; i < 5; i++)
+    //{
+    //    Model* sphere3 = new Model(sphere2);
+    //    sphere3->transform.SetTranslation(glm::vec3(0, 0.0f, 1.5f * i));
+    //    sphere3->transform.SetScale(glm::vec3(0.5f));
+    //    loadedModels.push_back(sphere3);
+    //    PhysicsObject* spherephysclone = new PhysicsObject(sphere3);
+    //    spherephysclone->physicsType = SPHERE;
+    //    spherephysclone->Initialize(false, true, ObjectMode::DYNAMIC);
+    //    spherephysclone->SetMass(0.5f);
+    //    engine.AddPhysicsObjects(spherephysclone);
+    //}
+
+
     engine.AddPhysicsObjects(spherephys);
    // engine.AddPhysicsObjects(spherephys2);
     engine.AddPhysicsObjects(floorPhys);
@@ -287,7 +325,7 @@ int main()
 
 
 
-
+    
     Light directionLight;
     directionLight.lightType = LightType:: DIRECTION_LIGHT;
     directionLight.lightModel = directionLightModel;

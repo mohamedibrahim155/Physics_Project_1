@@ -404,6 +404,7 @@ static bool CollisionSphereVsTriangle(cSphere* sphere, const Triangle& triangle,
 static bool CollisionSphereVsMeshOfTriangles(cSphere sphere,
 	const glm::mat4& transformMatrix,
 	const std::vector <std::vector <Triangle>>& triangles,
+	const std::vector <std::vector <cSphere*>>& triangleSpheres,
 	std::vector<glm::vec3>& collisionPoints,
 	std::vector<glm::vec3>& collisionNormals)
 {
@@ -416,24 +417,28 @@ static bool CollisionSphereVsMeshOfTriangles(cSphere sphere,
 	for (size_t i = 0; i < triangles.size(); i++)
 	{
 		const std::vector<Triangle>& triangleList = triangles[i];
-
+		const std::vector<cSphere*>& sphereList = triangleSpheres[i];
 		for (size_t j = 0; j < triangleList.size(); j++)
 		{
 			Triangle triangle = triangleList[j];
-
+			glm::vec4 transformedCenter = transformMatrix * glm::vec4(sphereList[j]->center, 1.0f);
+			sphereTriangle->center = glm::vec3(transformedCenter);
 			// Transform the sphere's position using the transformMatrix
-
+			sphereTriangle->radius = sphereList[j]->radius * maxScale;
 			// Transform the sphere's radius based on scaling
 
 			// Now you can check for collision between the transformed sphere and sphereTriangle
 			std::vector<glm::vec3> collisionPoint;
 			std::vector<glm::vec3> collisionNormal;
-			
-			   glm::vec3 point =glm::vec3(0);
-			   cSphere* temp = new cSphere(sphere);
-			   triangle.v1 = transformMatrix * glm::vec4(triangle.v1, 1.0f);
-			   triangle.v2 = transformMatrix * glm::vec4(triangle.v2, 1.0f);
-			   triangle.v3 = transformMatrix * glm::vec4(triangle.v3, 1.0f);
+
+			if (CheckSphereVSSphereCollision(&sphere, sphereTriangle, collisionPoint, collisionNormal))
+
+			{
+				glm::vec3 point = glm::vec3(0);
+				cSphere* temp = new cSphere(sphere);
+				triangle.v1 = transformMatrix * glm::vec4(triangle.v1, 1.0f);
+				triangle.v2 = transformMatrix * glm::vec4(triangle.v2, 1.0f);
+				triangle.v3 = transformMatrix * glm::vec4(triangle.v3, 1.0f);
 				if (CollisionSphereVsTriangle(temp, triangle, point))
 				{
 					//Debugger::Print("Sphere vs Triangle");
@@ -444,7 +449,7 @@ static bool CollisionSphereVsMeshOfTriangles(cSphere sphere,
 					collisionPoints.push_back(point);
 					collisionNormals.push_back(normal);
 				}
-			
+			}
 		}
 	}
 

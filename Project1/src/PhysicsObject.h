@@ -38,6 +38,9 @@ public:
 	void CalculateTriangle();
 	std::function<void(PhysicsObject*)> collisionCallback = nullptr;
 	std::vector<std::vector<Triangle>> listoftriangles;
+	std::vector < std::vector<cSphere*> > triangleSpheres;
+
+
 
 	//bool checkCollision( PhysicsObject& other);
 	bool checkCollision(PhysicsObject* other, std::vector<glm::vec3>& collisionPoints, std::vector<glm::vec3>& collisionNormals);

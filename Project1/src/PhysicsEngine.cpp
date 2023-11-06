@@ -119,20 +119,20 @@ void PhysicsEngine::UpdatePhysics(float deltatime)
                 normal += glm::normalize(normals[k]);
             }
 
-            normal = normal / static_cast<float>(normals.size());
+            normal = normal / (float)(normals.size());
 
-            glm::vec3 incident = physicsObjects[i]->velocity;
-            float dotProduct = glm::dot(incident, normal);
+            //glm::vec3 incident = physicsObjects[i]->velocity;
+            //float dotProduct = glm::dot(incident, normal);
 
-            if (dotProduct < 0) {
-                normal = -normal;
-                dotProduct = -dotProduct;
-            }
+            //if (dotProduct < 0) {
+            //    normal = -normal;
+            //    dotProduct = -dotProduct;
+            //}
 
             float bounciness = 0.1f; // adjust this value as needed
-            glm::vec3 reflected = glm::reflect(incident, normal) * physicsObjects[i]->bounciness;
+            glm::vec3 reflected = glm::reflect(glm::normalize(physicsObjects[i]->velocity), normal) ;
 
-            physicsObjects[i]->velocity = reflected;
+            physicsObjects[i]->velocity = reflected * (/*physicsObjects[i]->bounciness **/ glm::length(physicsObjects[i]->velocity));
         }
     }
 }

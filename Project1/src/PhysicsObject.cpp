@@ -111,6 +111,7 @@ bool PhysicsObject::checkCollision(PhysicsObject* other, std::vector<glm::vec3>&
 			//return CheckSphereAABBCollision(other->UpdateSphere(), UpdateAABB());
 			cSphere* updatedSphere = new cSphere(other->UpdateSphere());
 			return CheckSphereVSAABBCollision(updatedSphere, UpdateAABB(), false, collisionPoints, collisionNormals);
+			
 		}
 		break;
 #pragma region SphereVS
@@ -131,7 +132,7 @@ bool PhysicsObject::checkCollision(PhysicsObject* other, std::vector<glm::vec3>&
 		{
 
 			return CollisionSphereVsMeshOfTriangles(UpdateSphere(), other->model->transform.getModelMatrix(),
-				other->listoftriangles, collisionPoints, collisionNormals);
+				other->listoftriangles, other->triangleSpheres,collisionPoints, collisionNormals);
 
 		}
 #pragma endregion
@@ -139,7 +140,7 @@ bool PhysicsObject::checkCollision(PhysicsObject* other, std::vector<glm::vec3>&
 		if (other->physicsType == SPHERE)
 		{
 			return CollisionSphereVsMeshOfTriangles(other->UpdateSphere(),model->transform.getModelMatrix(),
-				listoftriangles, collisionPoints, collisionNormals);
+				listoftriangles, triangleSpheres,collisionPoints, collisionNormals);
 		}
 
 		break;
@@ -198,11 +199,25 @@ cSphere PhysicsObject::UpdateSphere()
 
 void PhysicsObject::CalculateTriangle()
 {
-
+	for (std::vector<cSphere*>&sphereList : triangleSpheres)
+	{
+		for (cSphere* s: sphereList)
+		{
+			delete s;
+		}
+		sphereList.clear();
+	}
 	
+	listoftriangles.clear();
+	triangleSpheres.clear();
+
 	for  (Mesh* mesh : model->meshes )
 	{
 		std::vector<Triangle> trianglelist;
+		std::vector<cSphere*> meshSphers;
+
+		trianglelist.reserve(mesh->triangle.size());
+		meshSphers.reserve(mesh->triangle.size());
 
 		for (const Triangles& triangle : mesh->triangle)
 		{
@@ -212,10 +227,18 @@ void PhysicsObject::CalculateTriangle()
 			temp.v3 = triangle.v3;
 			temp.normal = triangle.normal;
 
+
+			glm::vec3 sphereCenter = (temp.v1 + temp.v2 + temp.v3) / 3.0f;
+			float radius = glm::max(glm::distance(sphereCenter, temp.v1),
+				glm::max(glm::distance(sphereCenter, temp.v2), glm::distance(sphereCenter, temp.v3)));
+
 			trianglelist.push_back(temp);
+			meshSphers.push_back(new cSphere(sphereCenter, radius));
 		}
 		
 		listoftriangles.push_back(trianglelist);
+		triangleSpheres.push_back(std::move(meshSphers));
+
 
 	}
 
