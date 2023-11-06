@@ -48,6 +48,15 @@ void Mesh::meshDraw(Shader& shader)
     glActiveTexture(GL_TEXTURE0);
 
     glBindVertexArray(VAO);
+
+    if (isWireFrame)
+    {
+        (glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
+    }
+    else
+    {
+        (glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
+    }
     glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 

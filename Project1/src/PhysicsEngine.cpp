@@ -66,7 +66,7 @@ void PhysicsEngine::UpdatePhysics(float deltatime)
         std::vector<glm::vec3> normals;
 
         glm::vec3 gravity(0.0f, -9.81f * physicsObjects[i]->gravityValue, 0.0f);
-        glm::vec3 deltaAcceleration = gravity * deltatime * inverseMass;
+        glm::vec3 deltaAcceleration = gravity * deltatime * physicsObjects[i]->inverseMass;
 
         physicsObjects[i]->velocity += deltaAcceleration;
         glm::vec3 deltaVelocity = physicsObjects[i]->velocity * deltatime;
@@ -83,11 +83,12 @@ void PhysicsEngine::UpdatePhysics(float deltatime)
             }
             else
             {
-
-
-                if (physicsObjects[i]->checkCollision(physicsObjects[j], collisionPoints, normals))
+                std::vector<glm::vec3> perObjectCollisions;
+                std::vector<glm::vec3> perObjectNormals;
+                if (physicsObjects[i]->checkCollision(physicsObjects[j], perObjectCollisions, normals))
                 {
-
+                    collisionPoints.insert(collisionPoints.end(), perObjectCollisions.begin(), perObjectCollisions.end());
+                    normals.insert(normals.end(), perObjectNormals.begin(), perObjectNormals.end());
                     if (collisionPoints.size() > 0)
                     {
                         if (physicsObjects[i]->collisionCallbool)
@@ -97,11 +98,12 @@ void PhysicsEngine::UpdatePhysics(float deltatime)
                                 physicsObjects[i]->GetCollisionCall()(physicsObjects[j]);
                             }
                         }
-                    }
+
+                   
                 }
 
 
-
+       }
            
 
 

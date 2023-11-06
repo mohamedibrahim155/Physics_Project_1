@@ -22,6 +22,14 @@ Model::Model( std::string const& path, bool gamma = false,bool isFlip = false)
     loadModel(path);
 }
 
+Model::Model(Model* copyModel)
+{
+    this->meshes = copyModel->meshes;
+    this->modelName = copyModel->modelName;
+    this->isVisible = copyModel->isVisible;
+    this->isWireFrame = copyModel->isWireFrame;
+}
+
 
 
 void Model::Draw(Shader& shader)
@@ -34,7 +42,11 @@ void Model::Draw(Shader& shader)
     glm::mat4 matModel = transform.getModelMatrix();
     shader.setMat4("model", matModel);
     for (unsigned int i = 0; i < meshes.size(); i++)
+    {
+        meshes[i]->isWireFrame = this->isWireFrame;
         meshes[i]->meshDraw(shader);
+    }
+      
 }
 
 void Model::loadModel(std::string const& path)

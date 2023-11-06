@@ -56,8 +56,10 @@ public:
 	void SetPosition(const glm::vec3& Position);
 	const std::function<void(PhysicsObject*)>& GetCollisionCall();
 	void DoCollisionCall(const std::function<void(PhysicsObject*)>& collisionCallback);
-
+	float inverseMass = 1.0f;
 	float bounciness = 0.8f;
+	float mass = 1.0f;
+	void SetMass(const float& massValue);
 
 };
 

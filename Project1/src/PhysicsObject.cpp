@@ -138,7 +138,8 @@ bool PhysicsObject::checkCollision(PhysicsObject* other, std::vector<glm::vec3>&
 	case PhysicsType:: TRIANGLE :
 		if (other->physicsType == SPHERE)
 		{
-			
+			return CollisionSphereVsMeshOfTriangles(other->UpdateSphere(),model->transform.getModelMatrix(),
+				listoftriangles, collisionPoints, collisionNormals);
 		}
 
 		break;
@@ -305,4 +306,10 @@ const std::function<void(PhysicsObject*)>& PhysicsObject::GetCollisionCall()
 void PhysicsObject::DoCollisionCall(const std::function<void(PhysicsObject*)>& collisionCallback)
 {
 	this->collisionCallback = collisionCallback;
+}
+
+void PhysicsObject::SetMass(const float& massValue)
+{
+	this->mass = massValue;
+	inverseMass = 1.0f / mass;
 }

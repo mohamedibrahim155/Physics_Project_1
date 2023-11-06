@@ -179,7 +179,7 @@ static bool CheckSphereVSSphereCollision(cSphere* sphere1, cSphere* sphere2,
 		}
 
 		collisionPt = sphere1->center + sphere1->radius * collisionNr;
-
+		std::cout << "spherevs sphere detected : " << std::endl;
 		collisionPoint.push_back(collisionPt);
 		collisionNormal.push_back(collisionNr);
 

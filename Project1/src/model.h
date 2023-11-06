@@ -35,8 +35,7 @@ public:
     std::vector<Mesh*>    meshes;
     std::string directory;
     std::string modelPath;
-
-
+    std::string modelName;
     int offset;
     std::string id; //if needed 
     float size;
@@ -47,7 +46,8 @@ public:
     bool isVisible =true;
     Model();
     Model( std::string const& path, bool gamma, bool isFlip);
-    
+    Model(Model* copyModel);
+
     void Draw(Shader& shader);
     
 

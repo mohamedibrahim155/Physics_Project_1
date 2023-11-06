@@ -97,7 +97,7 @@ const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 
 
-Camera camera(glm::vec3(10, 2, 20));
+Camera camera(glm::vec3(0, 2, 20));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -170,13 +170,53 @@ int main()
 #pragma region Model Loading
     Model* sphere = new Model((char*)"Models/Ball/pokeball.obj", false, false);
     sphere->transform.SetTranslation(glm::vec3(0, 13, 0));
+    sphere->transform.SetScale(glm::vec3(0.5f));
     loadedModels.push_back(sphere);
 
     Model* sphere2 = new Model((char*)"Models/Ball/pokeball.obj", false, false);
-    sphere2->transform.SetTranslation(glm::vec3(0, 0, 0));
-    loadedModels.push_back(sphere2);
+  /*  sphere2->transform.SetTranslation(glm::vec3(1, 0.0f, 0));
+    sphere2->transform.SetScale(glm::vec3(0.5f));
+    loadedModels.push_back(sphere2);*/
 
 
+
+
+    Model* Floor = new Model((char*)"Models/Floor/Floorfbx.fbx", false, false);
+    Floor->transform.SetTranslation(glm::vec3(0, -5.0f, 0));
+    Floor->transform.SetRotation(90,glm::vec3(1, 0, 0));
+    Floor->transform.SetScale(glm::vec3(5));
+    Floor->isWireFrame = true;
+    loadedModels.push_back(Floor);
+
+    Model* Floor2 = new Model((char*)"Models/Floor/Floorfbx.fbx", false, false);
+    Floor2->transform.SetTranslation(glm::vec3(0, -2.0f, -8.0f));
+    Floor2->transform.SetRotation(135, glm::vec3(1, 0, 0));
+  //  Floor2->transform.SetRotation(45, glm::vec3(1, 0, 0));
+    Floor2->transform.SetScale(glm::vec3(5));
+    Floor2->isWireFrame = true;
+    loadedModels.push_back(Floor2);
+
+    Model* Floor3 = new Model((char*)"Models/Floor/Floorfbx.fbx", false, false);
+    Floor3->transform.SetTranslation(glm::vec3(0, -2.0f, 8));
+    Floor3->transform.SetRotation(-135, glm::vec3(1, 0, 0));
+    //  Floor2->transform.SetRotation(45, glm::vec3(1, 0, 0));
+    Floor3->transform.SetScale(glm::vec3(5));
+    Floor3->isWireFrame = true;
+    loadedModels.push_back(Floor3);
+
+    Model* Floor4 = new Model((char*)"Models/Floor/Floorfbx.fbx", false, false);
+    Floor4->transform.SetTranslation(glm::vec3(5, 0, 0));
+    Floor4->transform.SetRotation(-90, glm::vec3(0, 1, 0));
+    Floor4->transform.SetScale(glm::vec3(5));
+    Floor4->isWireFrame = true;
+    loadedModels.push_back(Floor4);
+
+    Model* Floor5 = new Model((char*)"Models/Floor/Floorfbx.fbx", false, false);
+    Floor5->transform.SetTranslation(glm::vec3(-5, 0, 0));
+    Floor5->transform.SetRotation(-90, glm::vec3(0, 1, 0));
+    Floor5->transform.SetScale(glm::vec3(5));
+    Floor5->isWireFrame = true;
+    loadedModels.push_back(Floor5);
 #pragma endregion
 
 
@@ -184,13 +224,28 @@ int main()
     spherephys->physicsType = SPHERE;
     spherephys->Initialize(false, true, ObjectMode::DYNAMIC);
     
+    
 
     PhysicsObject* spherephys2 = new PhysicsObject(sphere2);
     spherephys2->physicsType = SPHERE;
-    spherephys2->Initialize(false, true, ObjectMode::STATIC);
+    spherephys2->Initialize(false, true, ObjectMode::DYNAMIC);
+    spherephys2->SetMass(0.5f);
+    PhysicsObject* floorPhys = new PhysicsObject(Floor);
+    floorPhys->physicsType = TRIANGLE;
+    floorPhys->Initialize(false, true, ObjectMode::STATIC);
 
-
-
+    PhysicsObject* floorPhys2 = new PhysicsObject(Floor2);
+    floorPhys2->physicsType = TRIANGLE;
+    floorPhys2->Initialize(false, true, ObjectMode::STATIC);
+    PhysicsObject* floorPhys3 = new PhysicsObject(Floor3);
+    floorPhys3->physicsType = TRIANGLE;
+    floorPhys3->Initialize(false, true, ObjectMode::STATIC);
+    PhysicsObject* floorPhys4 = new PhysicsObject(Floor4);
+    floorPhys4->physicsType = TRIANGLE;
+    floorPhys4->Initialize(false, true, ObjectMode::STATIC);
+    PhysicsObject* floorPhys5 = new PhysicsObject(Floor5);
+    floorPhys5->physicsType = TRIANGLE;
+    floorPhys5->Initialize(false, true, ObjectMode::STATIC);
 
     Material material( 128.0f);
 
@@ -199,8 +254,25 @@ int main()
     Renderer render;
 
     PhysicsEngine engine;
+
+    for (size_t i = 0; i < 3; i++)
+    {
+        Model* sphere3 = new Model(sphere2);
+        sphere3->transform.SetTranslation(glm::vec3(1.5f * i, 0.0f, 0));
+        sphere3->transform.SetScale(glm::vec3(0.5f));
+        loadedModels.push_back(sphere3);
+        PhysicsObject* spherephysclone = new PhysicsObject(sphere3);
+        spherephysclone->physicsType = SPHERE;
+        spherephysclone->Initialize(false, true, ObjectMode::DYNAMIC);
+        engine.AddPhysicsObjects(spherephysclone);
+    }
     engine.AddPhysicsObjects(spherephys);
-    engine.AddPhysicsObjects(spherephys2);
+   // engine.AddPhysicsObjects(spherephys2);
+    engine.AddPhysicsObjects(floorPhys);
+    engine.AddPhysicsObjects(floorPhys2);
+    engine.AddPhysicsObjects(floorPhys3);
+    engine.AddPhysicsObjects(floorPhys4);
+    engine.AddPhysicsObjects(floorPhys5);
 
 #pragma region Mulitple LightHandler
 
@@ -245,13 +317,16 @@ int main()
     char inputBufferY[256]; 
     char inputBufferZ[256]; 
 
+
+    float currentFrame = static_cast<float>(glfwGetTime());
+    lastFrame = currentFrame;
     while (!glfwWindowShouldClose(window))
     {
 
-        float currentFrame = static_cast<float>(glfwGetTime());
+
+        currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-
 
         processInput(window);
 
@@ -285,12 +360,13 @@ int main()
          //drawing all the models
          for (size_t i = 0; i < loadedModels.size(); i++)
          {
-           
+            
              loadedModels[i]->Draw(defaultShader);
          }
+        
 
 
-         engine.UpdatePhysics(deltaTime);
+         engine.Update(deltaTime);
 
          if (isWireFrame)
          {

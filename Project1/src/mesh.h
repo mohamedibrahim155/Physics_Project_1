@@ -50,7 +50,7 @@ public:
     std::vector<Texture>      textures;
     std::vector<Triangles> triangle;
     unsigned int VAO;
-
+    bool isWireFrame;
     Mesh( std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     void meshDraw(Shader& shader);
 private:
