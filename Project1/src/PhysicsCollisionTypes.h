@@ -179,7 +179,7 @@ static bool CheckSphereVSSphereCollision(cSphere* sphere1, cSphere* sphere2,
 		}
 
 		collisionPt = sphere1->center + sphere1->radius * collisionNr;
-		std::cout << "spherevs sphere detected : " << std::endl;
+	//	std::cout << "spherevs sphere detected : " << std::endl;
 		collisionPoint.push_back(collisionPt);
 		collisionNormal.push_back(collisionNr);
 
@@ -443,7 +443,7 @@ static bool CollisionSphereVsMeshOfTriangles(cSphere sphere,
 				{
 					//Debugger::Print("Sphere vs Triangle");
 					//glm::vec3 normal = point - sphere->position;
-					std::cout << "spherevs trangle detected : " << std::endl;
+					//std::cout << "spherevs trangle detected : " << std::endl;
 					glm::vec3 normal = transformMatrix * glm::vec4(triangle.normal, 0.0f);
 
 					collisionPoints.push_back(point);

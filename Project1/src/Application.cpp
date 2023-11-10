@@ -109,7 +109,7 @@ float lastFrame = 0.0f;
 std::vector<Model*> loadedModels;
 std::vector<Model*> lightDebugModels;
 std::vector<Model*> animatingDoorModels;
-std::vector<Model*> starsModels;
+std::vector<Model*> BallModels;
 Model* testingModel;
 bool isTestingModel = false;
 void CheckingValues(Model* testModel, float x, float y, float z);
@@ -232,10 +232,12 @@ int main()
     sphere->transform.SetTranslation(glm::vec3(modelData[0].position));
     sphere->transform.SetScale(glm::vec3(modelData[0].scale));
     loadedModels.push_back(sphere);
+    sphere->startPostition = sphere->transform.position;
+    BallModels.push_back(sphere);
 
     Model* Geodude = new Model((char*) "Models/Geodude/Geodude.obj", false, false);
-    Geodude->transform.SetTranslation(glm::vec3(0,2,0));
-    Geodude->transform.SetScale(glm::vec3(10));
+    Geodude->transform.SetTranslation(glm::vec3(0,-4,-4));
+    Geodude->transform.SetScale(glm::vec3(1));
     loadedModels.push_back(Geodude);
 
 
@@ -305,6 +307,14 @@ int main()
     floorPhys5->physicsType = TRIANGLE;
     floorPhys5->Initialize(false, true, ObjectMode::STATIC);
 
+    PhysicsObject* GeodudePhys = new PhysicsObject(Geodude);
+    GeodudePhys->physicsType = TRIANGLE;
+    GeodudePhys->Initialize(false, true, ObjectMode::DYNAMIC);
+    GeodudePhys->gravityValue = 0;
+
+
+
+
     Material material( 128.0f);
 
 
@@ -319,6 +329,8 @@ int main()
         sphere3->transform.SetTranslation(glm::vec3(modelData[1].position.x * i, modelData[1].position.y, modelData[1].position.z));
         sphere3->transform.SetScale(glm::vec3(modelData[1].scale));
         loadedModels.push_back(sphere3);
+        sphere3->startPostition = sphere3->transform.position;
+        BallModels.push_back(sphere3);
 
         PhysicsObject* spherephysclone = new PhysicsObject(sphere3);
         spherephysclone->physicsType = SPHERE;
@@ -331,7 +343,8 @@ int main()
         sphere3->transform.SetTranslation(glm::vec3(modelData[2].position.x * i, modelData[2].position.y, modelData[2].position.z));
         sphere3->transform.SetScale(glm::vec3(modelData[2].scale));
         loadedModels.push_back(sphere3);
-
+        sphere3->startPostition = sphere3->transform.position;
+        BallModels.push_back(sphere3);
         PhysicsObject* spherephysclone = new PhysicsObject(sphere3);
         spherephysclone->physicsType = SPHERE;
         spherephysclone->Initialize(false, true, ObjectMode::DYNAMIC);
@@ -344,7 +357,8 @@ int main()
         sphere3->transform.SetTranslation(glm::vec3(modelData[3].position.x, modelData[3].position.y, modelData[3].position.z * i));
         sphere3->transform.SetScale(glm::vec3(modelData[3].scale));
         loadedModels.push_back(sphere3);
-
+        sphere3->startPostition = sphere3->transform.position;
+        BallModels.push_back(sphere3);
         PhysicsObject* spherephysclone = new PhysicsObject(sphere3);
         spherephysclone->physicsType = SPHERE;
         spherephysclone->Initialize(false, true, ObjectMode::DYNAMIC);
@@ -360,6 +374,8 @@ int main()
     engine.AddPhysicsObjects(floorPhys3);
     engine.AddPhysicsObjects(floorPhys4);
     engine.AddPhysicsObjects(floorPhys5);
+    engine.AddPhysicsObjects(GeodudePhys);
+
 
 #pragma region Mulitple LightHandler
 
@@ -404,6 +420,10 @@ int main()
     char inputBufferY[256]; 
     char inputBufferZ[256]; 
 
+
+    float animationTime = 7;
+    float amiationCurrentTime = 0;
+    float geoDudeSpeed = 1;
 
     float currentFrame = static_cast<float>(glfwGetTime());
     lastFrame = currentFrame;
@@ -454,6 +474,28 @@ int main()
 
 
          engine.Update(deltaTime);
+
+         for (size_t i = 0; i < BallModels.size(); i++)
+         {
+             if (BallModels[i]->transform.position.y < -15)
+             {
+                 BallModels[i]->transform.position = BallModels[i]->startPostition;
+             }
+         }
+
+         amiationCurrentTime += deltaTime;
+         if (amiationCurrentTime>= animationTime)
+         {
+             geoDudeSpeed = -(geoDudeSpeed);
+             amiationCurrentTime = 0;
+         }
+         else
+         {
+            // Geodude->transform.position.z += geoDudeSpeed * deltaTime;
+             GeodudePhys->velocity = glm ::vec3(0,0, geoDudeSpeed);
+         }
+         
+        
 
          if (isWireFrame)
          {

@@ -50,7 +50,7 @@ public:
 
     void Draw(Shader& shader);
     
-
+    glm::vec3 startPostition = glm::vec3(0);
 private:
     void loadModel(std::string const& path);    
     void processNode(aiNode* node, const aiScene* scene);   
@@ -58,6 +58,7 @@ private:
     std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
    
     bool isTextureFlipped;
+   
 };
 
 
