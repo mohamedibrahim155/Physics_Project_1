@@ -118,6 +118,63 @@ bool isfirstDoorOpen = false;
 
 int randomNumberGen(int min, int max);
 void LoadStarsModel();
+
+struct ModelData
+{
+
+
+    std::string path;
+    glm::vec3 position;
+    float angle;
+    glm::vec3 rotation;
+    glm::vec3 scale;
+};
+
+std::vector<ModelData> loadModelDataFromFile(const std::string& filePath)
+{
+
+
+    std::ifstream file(filePath);
+    std::vector<ModelData> modelData;
+
+    if (!file.is_open()) {
+        std::cerr << "Failed to open file: " << filePath << std::endl;
+        return modelData;
+    }
+
+    std::string line;
+    ModelData currentModel;
+
+    while (std::getline(file, line))
+    {
+        std::istringstream iss(line);
+        std::string token;
+        iss >> token;
+
+        if (token == "ModelPath:") {
+            iss >> currentModel.path;
+        }
+        else if (token == "ModelPosition:") {
+            iss >> currentModel.position.x >> currentModel.position.y >> currentModel.position.z;
+        }
+        else if (token == "angle:") {
+            iss >> currentModel.angle;
+        }
+        else if (token == "ModelRotation:") {
+
+            iss >> currentModel.rotation.x >> currentModel.rotation.y >> currentModel.rotation.z;
+
+        }
+        else if (token == "ModelScale:") {
+            iss >> currentModel.scale.x >> currentModel.scale.y >> currentModel.scale.z;
+            modelData.push_back(currentModel);
+        }
+    }
+
+    file.close();
+    return modelData;
+}
+
 int main()
 {
 
@@ -166,70 +223,68 @@ int main()
 
     Shader lightSource("Shaders/lighting.vert", "Shaders/lighting.frag");
 
+    std::vector<ModelData> modelData = loadModelDataFromFile("../Project1/src/Model.txt");
 
 #pragma region Model Loading
-    Model* sphere = new Model((char*)"Models/Ball/pokeball.obj", false, false);
-    sphere->transform.SetTranslation(glm::vec3(0, 13, 0));
-    sphere->transform.SetScale(glm::vec3(0.5f));
+
+
+    Model* sphere = new Model(modelData[0].path, false, false);
+    sphere->transform.SetTranslation(glm::vec3(modelData[0].position));
+    sphere->transform.SetScale(glm::vec3(modelData[0].scale));
     loadedModels.push_back(sphere);
 
-    Model* sphere2 = new Model((char*)"Models/Ball/pokeball.obj", false, false);
-  /*  sphere2->transform.SetTranslation(glm::vec3(1, 0.0f, 0));
-    sphere2->transform.SetScale(glm::vec3(0.5f));
-    loadedModels.push_back(sphere2);*/
+    Model* Geodude = new Model((char*) "Models/Geodude/Geodude.obj", false, false);
+    Geodude->transform.SetTranslation(glm::vec3(0,2,0));
+    Geodude->transform.SetScale(glm::vec3(10));
+    loadedModels.push_back(Geodude);
 
 
-
-
-    Model* Floor = new Model((char*)"Models/Floor/Floorfbx.fbx", false, false);
-    Floor->transform.SetTranslation(glm::vec3(0, -5.0f, 0));
-    Floor->transform.SetRotation(90,glm::vec3(1, 0, 0));
-    Floor->transform.SetScale(glm::vec3(5));
+    Model* sphere2 = new Model(modelData[1].path, false, false);
+ 
+    Model* Floor = new Model(modelData[4].path, false, false);
+    Floor->transform.SetTranslation(glm::vec3(modelData[4].position));
+    Floor->transform.SetRotation(modelData[4].angle , glm::vec3(modelData[4].rotation));
+    Floor->transform.SetScale(glm::vec3(modelData[4].scale));
     Floor->isWireFrame = true;
     loadedModels.push_back(Floor);
 
-    Model* Floor2 = new Model((char*)"Models/Floor/Floorfbx.fbx", false, false);
-    Floor2->transform.SetTranslation(glm::vec3(0, -2.0f, -8.0f));
-    Floor2->transform.SetRotation(135, glm::vec3(1, 0, 0));
-  //  Floor2->transform.SetRotation(45, glm::vec3(1, 0, 0));
-    Floor2->transform.SetScale(glm::vec3(5));
+    Model* Floor2 = new Model(modelData[5].path, false, false);
+    Floor2->transform.SetTranslation(glm::vec3(modelData[5].position));
+    Floor2->transform.SetRotation(modelData[5].angle , glm::vec3(modelData[5].rotation));
+ 
+    Floor2->transform.SetScale(glm::vec3(modelData[5].scale));
     Floor2->isWireFrame = true;
     loadedModels.push_back(Floor2);
 
-    Model* Floor3 = new Model((char*)"Models/Floor/Floorfbx.fbx", false, false);
-    Floor3->transform.SetTranslation(glm::vec3(0, -2.0f, 8));
-    Floor3->transform.SetRotation(-135, glm::vec3(1, 0, 0));
-    //  Floor2->transform.SetRotation(45, glm::vec3(1, 0, 0));
-    Floor3->transform.SetScale(glm::vec3(5));
+    Model* Floor3 = new Model(modelData[6].path, false, false);
+    Floor3->transform.SetTranslation(glm::vec3(modelData[6].position));
+    Floor3->transform.SetRotation(modelData[6].angle, glm::vec3(modelData[6].rotation));
+    Floor3->transform.SetScale(glm::vec3(modelData[6].scale));
     Floor3->isWireFrame = true;
     loadedModels.push_back(Floor3);
 
-    Model* Floor4 = new Model((char*)"Models/Floor/Floorfbx.fbx", false, false);
-    Floor4->transform.SetTranslation(glm::vec3(5, 0, 0));
-    Floor4->transform.SetRotation(-90, glm::vec3(0, 1, 0));
-    Floor4->transform.SetScale(glm::vec3(5));
+    Model* Floor4 = new Model(modelData[7].path, false, false);
+    Floor4->transform.SetTranslation(glm::vec3(modelData[7].position));
+    Floor4->transform.SetRotation(modelData[7].angle, glm::vec3(modelData[7].rotation));
+    Floor4->transform.SetScale(glm::vec3(modelData[7].scale));
     Floor4->isWireFrame = true;
     loadedModels.push_back(Floor4);
 
-    Model* Floor5 = new Model((char*)"Models/Floor/Floorfbx.fbx", false, false);
-    Floor5->transform.SetTranslation(glm::vec3(-5, 0, 0));
-    Floor5->transform.SetRotation(-90, glm::vec3(0, 1, 0));
-    Floor5->transform.SetScale(glm::vec3(5));
+    Model* Floor5 = new Model(modelData[8].path, false, false);
+    Floor5->transform.SetTranslation(glm::vec3(modelData[8].position));
+    Floor5->transform.SetRotation(modelData[8].angle, glm::vec3(modelData[8].rotation));
+    Floor5->transform.SetScale(glm::vec3(modelData[8].scale));
     Floor5->isWireFrame = true;
     loadedModels.push_back(Floor5);
+
+
 #pragma endregion
 
 
     PhysicsObject* spherephys= new PhysicsObject(sphere);
     spherephys->physicsType = SPHERE;
     spherephys->Initialize(false, true, ObjectMode::DYNAMIC);
-    
-    
-
-    PhysicsObject* spherephys2 = new PhysicsObject(sphere2);
-    spherephys2->physicsType = SPHERE;
-    spherephys2->Initialize(false, true, ObjectMode::DYNAMIC);
-    spherephys2->SetMass(0.5f);
+   
     PhysicsObject* floorPhys = new PhysicsObject(Floor);
     floorPhys->physicsType = TRIANGLE;
     floorPhys->Initialize(false, true, ObjectMode::STATIC);
@@ -237,12 +292,15 @@ int main()
     PhysicsObject* floorPhys2 = new PhysicsObject(Floor2);
     floorPhys2->physicsType = TRIANGLE;
     floorPhys2->Initialize(false, true, ObjectMode::STATIC);
+
     PhysicsObject* floorPhys3 = new PhysicsObject(Floor3);
     floorPhys3->physicsType = TRIANGLE;
     floorPhys3->Initialize(false, true, ObjectMode::STATIC);
+
     PhysicsObject* floorPhys4 = new PhysicsObject(Floor4);
     floorPhys4->physicsType = TRIANGLE;
     floorPhys4->Initialize(false, true, ObjectMode::STATIC);
+
     PhysicsObject* floorPhys5 = new PhysicsObject(Floor5);
     floorPhys5->physicsType = TRIANGLE;
     floorPhys5->Initialize(false, true, ObjectMode::STATIC);
@@ -258,9 +316,10 @@ int main()
     for (size_t i = 0; i < 3; i++)
     {
         Model* sphere3 = new Model(sphere2);
-        sphere3->transform.SetTranslation(glm::vec3(1.5f * i, 0.0f, 0));
-        sphere3->transform.SetScale(glm::vec3(0.5f));
+        sphere3->transform.SetTranslation(glm::vec3(modelData[1].position.x * i, modelData[1].position.y, modelData[1].position.z));
+        sphere3->transform.SetScale(glm::vec3(modelData[1].scale));
         loadedModels.push_back(sphere3);
+
         PhysicsObject* spherephysclone = new PhysicsObject(sphere3);
         spherephysclone->physicsType = SPHERE;
         spherephysclone->Initialize(false, true, ObjectMode::DYNAMIC);
@@ -269,9 +328,10 @@ int main()
     for (size_t i = 1; i < 4; i++)
     {
         Model* sphere3 = new Model(sphere2);
-        sphere3->transform.SetTranslation(glm::vec3(1.5f * i, 2, 0.5f));
-        sphere3->transform.SetScale(glm::vec3(0.5f));
+        sphere3->transform.SetTranslation(glm::vec3(modelData[2].position.x * i, modelData[2].position.y, modelData[2].position.z));
+        sphere3->transform.SetScale(glm::vec3(modelData[2].scale));
         loadedModels.push_back(sphere3);
+
         PhysicsObject* spherephysclone = new PhysicsObject(sphere3);
         spherephysclone->physicsType = SPHERE;
         spherephysclone->Initialize(false, true, ObjectMode::DYNAMIC);
@@ -281,31 +341,20 @@ int main()
     for (size_t i = 1; i < 5; i++)
     {
         Model* sphere3 = new Model(sphere2);
-        sphere3->transform.SetTranslation(glm::vec3(0, 0.0f, -1.5f * i));
-        sphere3->transform.SetScale(glm::vec3(0.5f));
+        sphere3->transform.SetTranslation(glm::vec3(modelData[3].position.x, modelData[3].position.y, modelData[3].position.z * i));
+        sphere3->transform.SetScale(glm::vec3(modelData[3].scale));
         loadedModels.push_back(sphere3);
+
         PhysicsObject* spherephysclone = new PhysicsObject(sphere3);
         spherephysclone->physicsType = SPHERE;
         spherephysclone->Initialize(false, true, ObjectMode::DYNAMIC);
         engine.AddPhysicsObjects(spherephysclone);
     }
 
-    //for (size_t i = 1; i < 5; i++)
-    //{
-    //    Model* sphere3 = new Model(sphere2);
-    //    sphere3->transform.SetTranslation(glm::vec3(0, 0.0f, 1.5f * i));
-    //    sphere3->transform.SetScale(glm::vec3(0.5f));
-    //    loadedModels.push_back(sphere3);
-    //    PhysicsObject* spherephysclone = new PhysicsObject(sphere3);
-    //    spherephysclone->physicsType = SPHERE;
-    //    spherephysclone->Initialize(false, true, ObjectMode::DYNAMIC);
-    //    spherephysclone->SetMass(0.5f);
-    //    engine.AddPhysicsObjects(spherephysclone);
-    //}
+  
 
 
     engine.AddPhysicsObjects(spherephys);
-   // engine.AddPhysicsObjects(spherephys2);
     engine.AddPhysicsObjects(floorPhys);
     engine.AddPhysicsObjects(floorPhys2);
     engine.AddPhysicsObjects(floorPhys3);

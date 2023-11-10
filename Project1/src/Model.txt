@@ -1,0 +1,68 @@
+
+///////////////// Sphere
+
+ModelPath: Models/Ball/pokeball.obj
+ModelPosition: 0 13 0
+angle: 0
+ModelRotation: 0 1 0 -90
+ModelScale: 0.5 0.5 0.5
+
+
+ModelPath: Models/Ball/pokeball.obj
+ModelPosition: 1.5 0 0
+angle: 0
+ModelRotation: 0 1 0 -90
+ModelScale: 0.5 0.5 0.5
+
+
+ModelPath: Models/Ball/pokeball.obj
+ModelPosition: 1.5 2 0.5
+angle: 0
+ModelRotation: 0 1 0 -90
+ModelScale: 0.5 0.5 0.5
+
+ModelPath: Models/Ball/pokeball.obj
+ModelPosition: 0 0 -1.5
+angle: 0
+ModelRotation: 0 1 0 -90
+ModelScale: 0.5 0.5 0.5
+
+
+/////////////////////////////////////////////
+
+
+///////////////// Floor (it is a mesh of triangles)
+
+ModelPath: Models/Floor/Floorfbx.fbx
+ModelPosition: 0 -5.0 0
+angle: 90
+ModelRotation: 1 0 0 
+ModelScale: 5 5 5
+
+ModelPath: Models/Floor/Floorfbx.fbx
+ModelPosition: 0 -2.0 -8.0
+angle: 135
+ModelRotation: 1 0 0 
+ModelScale: 5 5 5
+
+ModelPath: Models/Floor/Floorfbx.fbx
+ModelPosition: 0 -2.0 8.0
+angle: -135
+ModelRotation: 1 0 0 
+ModelScale: 5 5 5
+
+ModelPath: Models/Floor/Floorfbx.fbx
+ModelPosition: 5.0 0.0 0.0
+angle: -90
+ModelRotation: 0 1 0 
+ModelScale: 5 5 5
+
+ModelPath: Models/Floor/Floorfbx.fbx
+ModelPosition: -5 0 0
+angle: -90
+ModelRotation: 0 1 0 
+ModelScale: 5 5 5
+
+
+
+/////////////////////////////////////////////
