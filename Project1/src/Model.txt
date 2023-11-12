@@ -66,3 +66,11 @@ ModelScale: 5 5 5
 
 
 /////////////////////////////////////////////
+
+///////////////// Geodude
+
+ModelPath: Models/Geodude/Geodude.obj
+ModelPosition: 0 -4 -4
+angle: -90
+ModelRotation: 0 1 0 
+ModelScale: 1 1 1

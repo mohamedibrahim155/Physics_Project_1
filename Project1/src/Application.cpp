@@ -235,9 +235,9 @@ int main()
     sphere->startPostition = sphere->transform.position;
     BallModels.push_back(sphere);
 
-    Model* Geodude = new Model((char*) "Models/Geodude/Geodude.obj", false, false);
-    Geodude->transform.SetTranslation(glm::vec3(0,-4,-4));
-    Geodude->transform.SetScale(glm::vec3(1));
+    Model* Geodude = new Model(modelData[9].path, false, false);
+    Geodude->transform.SetTranslation(glm::vec3(modelData[9].position));
+    Geodude->transform.SetScale(glm::vec3(modelData[9].scale));
     loadedModels.push_back(Geodude);
 
 
